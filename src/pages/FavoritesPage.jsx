@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { Container, Row, Col, Alert, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import spots from '../data/spots';
 import SpotCard from '../components/SpotCard';
+import SpotModal from '../components/SpotModal';
 
 function FavoritesPage({ favorites, onToggleFavorite }) {
+  const [selectedSpot, setSelectedSpot] = useState(null);
+
   const favoriteSpots = spots.filter((spot) => favorites.includes(spot.id));
 
   return (
@@ -16,8 +20,8 @@ function FavoritesPage({ favorites, onToggleFavorite }) {
       </p>
 
       {favoriteSpots.length === 0 ? (
-        <Alert variant="warning" className="d-flex align-items-center gap-3">
-          <span>💡 Browse study spots and click <strong>♡ Save</strong> to add them here!</span>
+        <Alert variant="warning" className="d-flex align-items-center gap-3 flex-wrap">
+          <span>💡 Browse study spots and click <strong>♡</strong> to add them here!</span>
           <Button as={Link} to="/spots" variant="warning" size="sm" className="ms-auto">
             Browse Spots
           </Button>
@@ -30,11 +34,20 @@ function FavoritesPage({ favorites, onToggleFavorite }) {
                 spot={spot}
                 isFavorited={true}
                 onToggleFavorite={onToggleFavorite}
+                onViewDetails={setSelectedSpot}
               />
             </Col>
           ))}
         </Row>
       )}
+
+      <SpotModal
+        spot={selectedSpot}
+        show={!!selectedSpot}
+        onHide={() => setSelectedSpot(null)}
+        isFavorited={selectedSpot ? favorites.includes(selectedSpot.id) : false}
+        onToggleFavorite={onToggleFavorite}
+      />
     </Container>
   );
 }

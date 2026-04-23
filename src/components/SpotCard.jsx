@@ -6,14 +6,15 @@ const noiseBadgeColor = {
   Loud: 'danger',
 };
 
-function SpotCard({ spot, isFavorited, onToggleFavorite }) {
+function SpotCard({ spot, isFavorited, onToggleFavorite, onViewDetails }) {
   return (
     <Card className="h-100 shadow-sm">
       <Card.Img
         variant="top"
         src={spot.image}
         alt={spot.name}
-        style={{ height: '180px', objectFit: 'cover' }}
+        style={{ height: '180px', objectFit: 'cover', cursor: 'pointer' }}
+        onClick={() => onViewDetails(spot)}
         onError={(e) => {
           e.target.src = 'https://placehold.co/400x180?text=Study+Spot';
         }}
@@ -41,17 +42,20 @@ function SpotCard({ spot, isFavorited, onToggleFavorite }) {
           💺 Seating: {spot.seating}
         </div>
 
-        <div className="d-flex justify-content-between align-items-center mt-auto">
-          <span className="fw-semibold text-warning">
-            ★ {spot.rating.toFixed(1)}
-          </span>
-          <Button
-            variant={isFavorited ? 'danger' : 'outline-danger'}
-            size="sm"
-            onClick={() => onToggleFavorite(spot.id)}
-          >
-            {isFavorited ? '♥ Saved' : '♡ Save'}
-          </Button>
+        <div className="d-flex justify-content-between align-items-center mt-auto gap-2">
+          <span className="fw-semibold text-warning">★ {spot.rating.toFixed(1)}</span>
+          <Stack direction="horizontal" gap={2}>
+            <Button variant="outline-secondary" size="sm" onClick={() => onViewDetails(spot)}>
+              Details
+            </Button>
+            <Button
+              variant={isFavorited ? 'danger' : 'outline-danger'}
+              size="sm"
+              onClick={() => onToggleFavorite(spot.id)}
+            >
+              {isFavorited ? '♥' : '♡'}
+            </Button>
+          </Stack>
         </div>
       </Card.Body>
     </Card>

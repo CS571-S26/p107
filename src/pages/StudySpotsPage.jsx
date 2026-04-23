@@ -4,20 +4,31 @@ import spots from '../data/spots';
 import SpotCard from '../components/SpotCard';
 import SearchBar from '../components/SearchBar';
 import FilterBar from '../components/FilterBar';
+import SpotModal from '../components/SpotModal';
 
 function StudySpotsPage({ favorites, onToggleFavorite }) {
   const [search, setSearch] = useState('');
   const [noiseFilter, setNoiseFilter] = useState('All');
   const [outletsOnly, setOutletsOnly] = useState(false);
+  const [sortBy, setSortBy] = useState('default');
+  const [selectedSpot, setSelectedSpot] = useState(null);
 
-  const filtered = spots.filter((spot) => {
-    const matchSearch =
-      spot.name.toLowerCase().includes(search.toLowerCase()) ||
-      spot.location.toLowerCase().includes(search.toLowerCase());
-    const matchNoise = noiseFilter === 'All' || spot.noiseLevel === noiseFilter;
-    const matchOutlets = !outletsOnly || spot.outlets;
-    return matchSearch && matchNoise && matchOutlets;
-  });
+  const filtered = spots
+    .filter((spot) => {
+      const matchSearch =
+        spot.name.toLowerCase().includes(search.toLowerCase()) ||
+        spot.location.toLowerCase().includes(search.toLowerCase());
+      const matchNoise = noiseFilter === 'All' || spot.noiseLevel === noiseFilter;
+      const matchOutlets = !outletsOnly || spot.outlets;
+      return matchSearch && matchNoise && matchOutlets;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'rating-desc') return b.rating - a.rating;
+      if (sortBy === 'rating-asc') return a.rating - b.rating;
+      if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
+      if (sortBy === 'name-desc') return b.name.localeCompare(a.name);
+      return 0;
+    });
 
   return (
     <Container className="py-4">
@@ -32,6 +43,8 @@ function StudySpotsPage({ favorites, onToggleFavorite }) {
         setNoiseFilter={setNoiseFilter}
         outletsOnly={outletsOnly}
         setOutletsOnly={setOutletsOnly}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
       />
 
       {filtered.length === 0 ? (
@@ -44,11 +57,20 @@ function StudySpotsPage({ favorites, onToggleFavorite }) {
                 spot={spot}
                 isFavorited={favorites.includes(spot.id)}
                 onToggleFavorite={onToggleFavorite}
+                onViewDetails={setSelectedSpot}
               />
             </Col>
           ))}
         </Row>
       )}
+
+      <SpotModal
+        spot={selectedSpot}
+        show={!!selectedSpot}
+        onHide={() => setSelectedSpot(null)}
+        isFavorited={selectedSpot ? favorites.includes(selectedSpot.id) : false}
+        onToggleFavorite={onToggleFavorite}
+      />
     </Container>
   );
 }

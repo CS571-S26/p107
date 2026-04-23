@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Nav, Container, Badge } from 'react-bootstrap';
 
-function NavBar() {
+function NavBar({ favoritesCount }) {
   const location = useLocation();
 
   return (
@@ -34,7 +34,12 @@ function NavBar() {
               to="/favorites"
               className={location.pathname === '/favorites' ? 'active fw-semibold' : ''}
             >
-              Favorites
+              Favorites{' '}
+              {favoritesCount > 0 && (
+                <Badge bg="danger" pill style={{ fontSize: '0.7rem' }}>
+                  {favoritesCount}
+                </Badge>
+              )}
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
