@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Container, Row, Col, Button, Card, Stack } from 'react-bootstrap';
+import { Container, Row, Col, Button, Stack } from 'react-bootstrap';
+import HeroSection from '../components/HeroSection';
+import FeatureCard from '../components/FeatureCard';
 
 const features = [
   {
@@ -22,56 +24,27 @@ const features = [
 function HomePage() {
   return (
     <>
-      {/* Hero */}
-      <div
-        style={{
-          background: 'linear-gradient(135deg, #1a1a2e 0%, #c5102e 100%)',
-          color: 'white',
-          padding: '80px 0 60px',
-        }}
-      >
-        <Container className="text-center">
-          <h1 className="display-4 fw-bold mb-3">
-            Find Your Perfect Study Spot 📍
-          </h1>
-          <p className="lead mb-4" style={{ maxWidth: '600px', margin: '0 auto 1.5rem' }}>
-            SpotFinder helps UW–Madison students discover quiet corners, outlet-rich
-            tables, and hidden gems across campus — all in one place.
-          </p>
-          <Button
-            as={Link}
-            to="/spots"
-            variant="warning"
-            size="lg"
-            className="fw-bold px-5"
-          >
-            Browse Study Spots
-          </Button>
-        </Container>
-      </div>
+      <HeroSection
+        title="Find Your Perfect Study Spot"
+        subtitle="SpotFinder helps UW–Madison students discover quiet corners, outlet-rich tables, and hidden gems across campus — all in one place."
+        ctaText="Browse Study Spots"
+        ctaLink="/spots"
+      />
 
-      {/* Features */}
       <Container className="py-5">
         <h2 className="text-center fw-bold mb-4">Why SpotFinder?</h2>
         <Row xs={1} md={3} className="g-4">
           {features.map((f) => (
             <Col key={f.title}>
-              <Card className="h-100 text-center shadow-sm border-0">
-                <Card.Body className="py-4">
-                  <div style={{ fontSize: '2.5rem' }}>{f.icon}</div>
-                  <Card.Title className="fw-bold mt-2">{f.title}</Card.Title>
-                  <Card.Text className="text-muted">{f.desc}</Card.Text>
-                </Card.Body>
-              </Card>
+              <FeatureCard icon={f.icon} title={f.title} desc={f.desc} />
             </Col>
           ))}
         </Row>
       </Container>
 
-      {/* CTA */}
       <div style={{ background: '#f8f9fa', padding: '50px 0' }}>
         <Container className="text-center">
-          <h3 className="fw-bold mb-3">Ready to find your spot?</h3>
+          <h2 className="fw-bold mb-3">Ready to find your spot?</h2>
           <p className="text-muted mb-4">
             Browse all campus study locations or check your saved favorites.
           </p>

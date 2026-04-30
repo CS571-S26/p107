@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Container, Row, Col, Alert } from 'react-bootstrap';
+import { Container, Alert } from 'react-bootstrap';
 import spots from '../data/spots';
-import SpotCard from '../components/SpotCard';
+import SpotGrid from '../components/SpotGrid';
 import SearchBar from '../components/SearchBar';
 import FilterBar from '../components/FilterBar';
 import SpotModal from '../components/SpotModal';
@@ -47,22 +47,15 @@ function StudySpotsPage({ favorites, onToggleFavorite }) {
         setSortBy={setSortBy}
       />
 
-      {filtered.length === 0 ? (
-        <Alert variant="info">No spots match your filters. Try adjusting your search.</Alert>
-      ) : (
-        <Row xs={1} sm={2} lg={3} className="g-4">
-          {filtered.map((spot) => (
-            <Col key={spot.id}>
-              <SpotCard
-                spot={spot}
-                isFavorited={favorites.includes(spot.id)}
-                onToggleFavorite={onToggleFavorite}
-                onViewDetails={setSelectedSpot}
-              />
-            </Col>
-          ))}
-        </Row>
-      )}
+      <SpotGrid
+        spots={filtered}
+        favorites={favorites}
+        onToggleFavorite={onToggleFavorite}
+        onViewDetails={setSelectedSpot}
+        emptyContent={
+          <Alert variant="info">No spots match your filters. Try adjusting your search.</Alert>
+        }
+      />
 
       <SpotModal
         spot={selectedSpot}

@@ -12,26 +12,31 @@ const noiseDesc = {
   Loud: 'High noise level — best for casual work or group projects.',
 };
 
+// Dark gold — passes WCAG AA (4.5:1) on white background
+const RATING_COLOR = '#7a5c00';
+
 function SpotModal({ spot, show, onHide, isFavorited, onToggleFavorite }) {
   if (!spot) return null;
 
   return (
-    <Modal show={show} onHide={onHide} size="lg" centered>
+    <Modal show={show} onHide={onHide} size="lg" centered aria-labelledby="spot-modal-title">
       <Modal.Header closeButton>
-        <Modal.Title className="fw-bold">{spot.name}</Modal.Title>
+        <Modal.Title id="spot-modal-title" className="fw-bold">{spot.name}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body className="p-0">
         <img
           src={spot.image}
-          alt={spot.name}
+          alt={`${spot.name} study space`}
           style={{ width: '100%', height: '240px', objectFit: 'cover' }}
           onError={(e) => {
             e.target.src = 'https://placehold.co/800x240?text=Study+Spot';
           }}
         />
         <div className="p-4">
-          <p className="text-muted mb-3">📍 {spot.location}</p>
+          <p className="text-muted mb-3">
+            <span aria-hidden="true">📍 </span>{spot.location}
+          </p>
 
           <Row className="mb-4">
             <Col sm={6} className="mb-3">
@@ -45,7 +50,7 @@ function SpotModal({ spot, show, onHide, isFavorited, onToggleFavorite }) {
             </Col>
             <Col sm={6} className="mb-3">
               <p className="fw-semibold mb-1">Power Outlets</p>
-              <span>{spot.outlets ? '✅ Available' : '❌ Not available'}</span>
+              <span>{spot.outlets ? 'Available' : 'Not available'}</span>
             </Col>
             <Col sm={6} className="mb-3">
               <p className="fw-semibold mb-1">Seating</p>
@@ -53,11 +58,17 @@ function SpotModal({ spot, show, onHide, isFavorited, onToggleFavorite }) {
             </Col>
             <Col sm={6} className="mb-3">
               <p className="fw-semibold mb-1">Hours</p>
-              <span>⏰ {spot.hours}</span>
+              <span>{spot.hours}</span>
             </Col>
             <Col sm={6} className="mb-3">
               <p className="fw-semibold mb-1">Rating</p>
-              <span className="text-warning fw-bold">★ {spot.rating.toFixed(1)}</span>
+              <span
+                className="fw-bold"
+                style={{ color: RATING_COLOR }}
+                aria-label={`${spot.rating.toFixed(1)} out of 5`}
+              >
+                ★ {spot.rating.toFixed(1)}
+              </span>
               <span className="text-muted ms-1" style={{ fontSize: '0.85rem' }}> / 5.0</span>
             </Col>
             <Col sm={6} className="mb-3">
@@ -77,8 +88,9 @@ function SpotModal({ spot, show, onHide, isFavorited, onToggleFavorite }) {
             target="_blank"
             rel="noreferrer"
             className="btn btn-outline-secondary btn-sm"
+            aria-label={`View ${spot.name} on Google Maps (opens in new tab)`}
           >
-            🗺️ View on Google Maps
+            <span aria-hidden="true">🗺️ </span>View on Google Maps
           </a>
         </div>
       </Modal.Body>
@@ -90,6 +102,7 @@ function SpotModal({ spot, show, onHide, isFavorited, onToggleFavorite }) {
         <Button
           variant={isFavorited ? 'danger' : 'outline-danger'}
           onClick={() => onToggleFavorite(spot.id)}
+          aria-label={isFavorited ? `Remove ${spot.name} from favorites` : `Save ${spot.name} to favorites`}
         >
           {isFavorited ? '♥ Remove from Favorites' : '♡ Save to Favorites'}
         </Button>

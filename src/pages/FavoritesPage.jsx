@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Container, Row, Col, Alert, Button } from 'react-bootstrap';
+import { Container, Alert, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import spots from '../data/spots';
-import SpotCard from '../components/SpotCard';
+import SpotGrid from '../components/SpotGrid';
 import SpotModal from '../components/SpotModal';
 
 function FavoritesPage({ favorites, onToggleFavorite }) {
@@ -19,27 +19,22 @@ function FavoritesPage({ favorites, onToggleFavorite }) {
           : `You have ${favoriteSpots.length} saved spot${favoriteSpots.length > 1 ? 's' : ''}.`}
       </p>
 
-      {favoriteSpots.length === 0 ? (
-        <Alert variant="warning" className="d-flex align-items-center gap-3 flex-wrap">
-          <span>💡 Browse study spots and click <strong>♡</strong> to add them here!</span>
-          <Button as={Link} to="/spots" variant="warning" size="sm" className="ms-auto">
-            Browse Spots
-          </Button>
-        </Alert>
-      ) : (
-        <Row xs={1} sm={2} lg={3} className="g-4">
-          {favoriteSpots.map((spot) => (
-            <Col key={spot.id}>
-              <SpotCard
-                spot={spot}
-                isFavorited={true}
-                onToggleFavorite={onToggleFavorite}
-                onViewDetails={setSelectedSpot}
-              />
-            </Col>
-          ))}
-        </Row>
-      )}
+      <SpotGrid
+        spots={favoriteSpots}
+        favorites={favorites}
+        onToggleFavorite={onToggleFavorite}
+        onViewDetails={setSelectedSpot}
+        emptyContent={
+          <Alert variant="warning" className="d-flex align-items-center gap-3 flex-wrap">
+            <span>
+              Browse study spots and click <strong>Save</strong> to add them here!
+            </span>
+            <Button as={Link} to="/spots" variant="warning" size="sm" className="ms-auto">
+              Browse Spots
+            </Button>
+          </Alert>
+        }
+      />
 
       <SpotModal
         spot={selectedSpot}
